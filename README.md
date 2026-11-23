@@ -1,4 +1,4 @@
-# A tu gusto · Web independiente
+# AMU · Web independiente
 
 Repositorio: https://github.com/Amuriza86/recetas-saludables
 

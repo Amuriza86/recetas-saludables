@@ -27,7 +27,7 @@ export async function createWeeklyPdf(plan,{templateBytes,headerBytes,lib=global
  top+=20;centered(p,'DESAYUNOS Y ORGANIZACIÓN',top,10);top+=24;
  top=paragraph(p,'Cada desayuno remite a su ficha del recetario. Las cantidades indicadas en las fichas son para las personas elegidas y la compra suma todas las apariciones durante la semana.',margin,top,width,9);
  top=paragraph(p,'El plan combina platos de las guías de forma aleatoria. Los ingredientes favoritos aumentan la prioridad, pero no excluyen otros alimentos. Revisa cada ficha antes de cocinar.',margin,top+12,width,9);
- paragraph(p,'Documento generado por A tu gusto a partir de tus ejemplos. No es una nueva pauta prescrita por el autor de las guías.',margin,top+12,width,8.5,bold);
+ paragraph(p,'Documento generado por AMU a partir de tus ejemplos. No es una nueva pauta prescrita por el autor de las guías.',margin,top+12,width,8.5,bold);
  let rp=blank('RECETARIO BASE'),y=112;
  const entries=planEntries(plan);
  for(const {id} of entries){const r=recipeById[id],pantry=pantryFor(r),title=`${r.name.toUpperCase()} (${plan.servings} ${plan.servings===1?'ración':'raciones'})`,items=r.items.map(i=>`${ingredientById[i.id].name}: ${formatQuantity(i,plan.servings)}`).join(' · ')+'.'+(pantry.length?' '+pantry.join(', ')+': al gusto.':''),steps=r.steps.map((s,i)=>`${i+1}. ${s}`).join(' '),titleLines=wrap(title,width,9,bold),itemLines=wrap(items,width-87,8.4),stepLines=wrap(steps,width-87,8.4),h1=Math.max(22,itemLines.length*11+10),h2=Math.max(22,stepLines.length*11+10),block=titleLines.length*12+8+h1+h2+27;
@@ -49,6 +49,6 @@ export async function createWeeklyPdf(plan,{templateBytes,headerBytes,lib=global
  x=margin+column*(colW+16);rect(p,x,y,colW,22,pale);text(p,'DESPENSA Y ALIÑOS',x+6,y+6,9,bold);y=paragraph(p,extras.join(' · ')+'. Cantidades al gusto.',x+6,y+29,colW-12,8.7);
  paragraph(p,purchaseNote,x+6,y+16,colW-12,8.2);
  const ending=await doc.copyPages(template,[4,5]);ending.forEach(p=>doc.addPage(p));
- const total=doc.getPageCount();doc.getPages().forEach((page,i)=>{if(i===0){text(page,'PLAN SEMANAL GENERADO · A TU GUSTO',61.8,H-56,8,font,white);return}text(page,'A tu gusto · Plan generado automáticamente a partir de las guías',margin,H-28,7,font,rgb(.35,.35,.35));text(page,`${i+1} / ${total}`,W-66,H-28,7,font,rgb(.35,.35,.35))});
- doc.setTitle(`Plan semanal Mikel · ${plan.start}`);doc.setAuthor('A tu gusto');doc.setSubject('Plan semanal aleatorio basado en las guías aportadas');doc.setCreator('A tu gusto · Generador local');doc.setLanguage('es-ES');return doc.save();
+ const total=doc.getPageCount();doc.getPages().forEach((page,i)=>{if(i===0){text(page,'PLAN SEMANAL GENERADO · AMU',61.8,H-56,8,font,white);return}text(page,'AMU · Plan generado automáticamente a partir de las guías',margin,H-28,7,font,rgb(.35,.35,.35));text(page,`${i+1} / ${total}`,W-66,H-28,7,font,rgb(.35,.35,.35))});
+ doc.setTitle(`Plan semanal Mikel · ${plan.start}`);doc.setAuthor('AMU');doc.setSubject('Plan semanal aleatorio basado en las guías aportadas');doc.setCreator('AMU · Generador local');doc.setLanguage('es-ES');return doc.save();
 }
