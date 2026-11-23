@@ -1,1 +1,17 @@
-{"name":"a-tu-gusto","version":"1.1.0","private":true,"description":"Web independiente con 71 recetas y generador local de planes semanales en PDF.","type":"module","engines":{"node":">=22"},"scripts":{"dev":"node server.mjs","start":"node server.mjs","build":"node generate-assets.mjs && node check.mjs","check":"node check.mjs","check:weekly":"node check-weekly.mjs"}}
+{
+  "name": "recetas-saludables",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Web independiente con 71 recetas y generador local de planes semanales en PDF.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs",
+    "build": "node generate-assets.mjs && node check.mjs",
+    "check": "node check.mjs",
+    "check:weekly": "node check-weekly.mjs"
+  }
+}
