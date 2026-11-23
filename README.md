@@ -2,6 +2,8 @@
 
 Repositorio: https://github.com/Amuriza86/recetas-saludables
 
+Web publicada: https://recetas-saludables.lurbide.workers.dev
+
 ## Publicación automática desde GitHub
 
 El proyecto está preparado para conectar `main` a un alojamiento estático, con estos ajustes:
@@ -14,7 +16,23 @@ El proyecto está preparado para conectar `main` a un alojamiento estático, con
 
 Las ilustraciones SVG se generan desde `generate-assets.mjs` durante la construcción, por lo que no es necesario versionarlas. El código editable de las recetas y del generador de PDF sí está incluido, junto con la biblioteca PDF-Lib y la plantilla depurada.
 
-Para Cloudflare Pages: conecta este repositorio en **Workers & Pages > Create application > Pages > Connect to Git**, elige `main`, usa los ajustes anteriores y publica. Las siguientes subidas a `main` se publicarán automáticamente.
+### Cloudflare Workers
+
+La publicación está preparada en la cuenta personal de Mikel, con el Worker `recetas-saludables` y la configuración `cloudflare.config.ts`.
+
+Para conectar las actualizaciones automáticas: abre **Workers & Pages > recetas-saludables > Settings > Builds > Connect**, autoriza la aplicación de GitHub de Cloudflare para este repositorio y usa:
+
+- Rama de producción: `main`.
+- Directorio raíz: `/`.
+- Build command: `npm run build`.
+- Deploy command: `npx --yes cf@latest deploy ./dist`.
+- Versión de Node.js: 22 o posterior.
+
+Guarda y publica. Después de conectar correctamente GitHub, los cambios subidos a `main` iniciarán una nueva construcción y publicación. La primera publicación directa ya está hecha; la conexión con GitHub requiere la autorización del propietario de la cuenta.
+
+### Otros alojamientos
+
+También se puede usar Cloudflare Pages o Netlify con el comando `npm run build` y la carpeta `dist`. El código no depende de un proveedor de alojamiento.
 
 Web estática de recetas saludables. Los visitantes no necesitan ChatGPT, registro ni inicio de sesión. No usa API de OpenAI, claves de acceso, base de datos ni suscripciones.
 
