@@ -2,9 +2,9 @@
 
 Repositorio: https://github.com/Amuriza86/recetas-saludables
 
-Web publicada en Cloudflare Pages: https://recetas-saludables-3qs.pages.dev
+Web publicada en Cloudflare Pages: https://recetas-mikel.pages.dev
 
-La rama `main` de este repositorio está conectada a Cloudflare Pages. Cada subida inicia `npm run build` y publica la carpeta `dist`. Cloudflare asignó el sufijo `-3qs` al dominio de este proyecto.
+La rama `main` de este repositorio está conectada a Cloudflare Pages. Cada subida inicia `npm run build` y publica la carpeta `dist`. El proyecto de Pages se llama `recetas-mikel` y utiliza una dirección sin sufijos.
 
 ## Publicación automática desde GitHub
 
