@@ -1,0 +1,14 @@
+import {generatePlan,validPlan,localDate,mondayOf,recipeById,dateForDay,shoppingForPlan} from './weekly-plan.js';
+import {createWeeklyPdf} from './weekly-pdf.js';
+const $=s=>document.querySelector(s);let plan=null;
+try{const cached=JSON.parse(localStorage.getItem('gusto-weekly-plan'));if(validPlan(cached))plan=cached}catch{}
+$('#week-start').value=plan?.start||mondayOf(localDate(new Date()));$('#week-servings').value=String(plan?.servings||1);
+function store(){try{localStorage.setItem('gusto-weekly-plan',JSON.stringify(plan))}catch{}}
+function status(message,error=false){const el=$('#weekly-status');el.textContent=message;el.classList.toggle('error',error)}
+function render(){const el=$('#weekly-preview');el.hidden=!plan;if(!plan)return;$('#weekly-range').textContent=`${dateForDay(plan.start,0)} - ${dateForDay(plan.start,6)} · ${plan.servings} persona${plan.servings===1?'':'s'}`;$('#weekly-table').innerHTML=plan.days.map((d,i)=>`<tr><th scope="row">${d.day}<small>${dateForDay(plan.start,i)}</small></th>${['breakfast','lunch','dinner'].map(key=>`<td><button class="week-recipe" data-week-recipe="${d[key]}">${recipeById[d[key]].name}</button></td>`).join('')}</tr>`).join('');$('#weekly-count').textContent=`21 comidas planificadas · ${shoppingForPlan(plan).length} ingredientes en la compra`;}
+async function download(){const bytes=await createWeeklyPdf(plan),url=URL.createObjectURL(new Blob([bytes],{type:'application/pdf'})),a=document.createElement('a');a.href=url;a.download=`plan-semanal-mikel-${plan.start}.pdf`;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),15000);status('PDF preparado. Revisa las descargas de tu navegador.');}
+async function busy(action){const buttons=[$('#generate-week'),$('#download-week')];buttons.forEach(b=>b.disabled=true);$('#weekly-generator').setAttribute('aria-busy','true');try{await action()}catch(e){console.error('No se pudo generar el plan semanal',e);status(e.message||'No se ha podido generar el PDF. Vuelve a intentarlo.',true)}finally{buttons.forEach(b=>b.disabled=false);$('#weekly-generator').setAttribute('aria-busy','false')}}
+$('#generate-week').addEventListener('click',()=>busy(async()=>{status('Preparando una nueva semana y su PDF…');let selected=[];try{selected=JSON.parse(localStorage.getItem('gusto-ingredients'))||[]}catch{}plan=generatePlan({start:$('#week-start').value,servings:Number($('#week-servings').value),selected:Array.isArray(selected)?selected:[],previous:plan});$('#week-start').value=plan.start;store();render();await download()}));
+$('#download-week').addEventListener('click',()=>busy(async()=>{status('Preparando el PDF de esta semana…');await download()}));
+$('#weekly-table').addEventListener('click',e=>{const b=e.target.closest('[data-week-recipe]');if(b)document.dispatchEvent(new CustomEvent('gusto:recipe',{detail:b.dataset.weekRecipe}))});
+render();

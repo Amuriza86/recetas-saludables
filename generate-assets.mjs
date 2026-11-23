@@ -1,0 +1,31 @@
+import fs from 'node:fs';
+import {ingredients,recipes} from './dist/data.js';
+fs.mkdirSync('dist/assets',{recursive:true});
+const colors=Object.fromEntries(ingredients.map(i=>[i.id,i.color]));
+function shape(id,x,y,size,angle=0){const c=colors[id],t=`translate(${x} ${y}) rotate(${angle}) scale(${size/60})`;let s='';
+if(['tomate','fresas'].includes(id))s=`<circle r="25" fill="${c}"/><ellipse cx="-8" cy="-9" rx="9" ry="6" fill="#fff" opacity=".18"/><path d="M-12 -19 0 -14 10 -24 8 -12 18 -10 3 -8 -5 -3 -4 -15Z" fill="#567442"/>`;
+else if(['calabacin','patata','boniato','berenjena','aguacate','mango'].includes(id)){s=`<ellipse rx="23" ry="30" fill="${id==='aguacate'?'#637b3f':c}"/><ellipse rx="18" ry="24" fill="${id==='aguacate'?'#d0d88d':c}" stroke="#fff" stroke-opacity=".28" stroke-width="2"/>`;if(id==='aguacate')s+='<circle cy="7" r="10" fill="#a1774c"/><circle cx="-3" cy="4" r="3" fill="#bc9463"/>';else s+='<path d="M-9 -13 8 13M-9 -3 5 20" stroke="#fff" stroke-opacity=".2" stroke-width="2"/>'}
+else if(id==='huevo')s='<ellipse rx="23" ry="29" fill="#fffdf2" stroke="#eee5cc" stroke-width="2"/><circle cy="4" r="13" fill="#e8bc48"/><circle cx="-4" cy="0" r="5" fill="#f8d775"/>';
+else if(['salmon','pollo','pavo','merluza','atun','jamon','anchoas','pulpo'].includes(id)){s=`<path d="M-27 -15Q-8 -32 23 -19L29 9Q17 29 -20 20Z" fill="${c}" stroke="#8d6542" stroke-opacity=".2" stroke-width="2"/><path d="M-18 -10 18 -7M-17 0 18 5M-12 11 10 15" stroke="${id==='salmon'?'#ffe0bc':'#976e43'}" stroke-width="3" stroke-linecap="round" opacity=".5"/>`}
+else if(id==='gambas')s='<path d="M18 -22C-26 -39 -38 20 -4 25Q17 30 23 9L7 4Q3 19 -8 7C-18 -8 -6 -18 9 -10Z" fill="#eaa087" stroke="#d37e69" stroke-width="2"/><path d="M-15 -16 -6 -6M-22 -3 -10 0M-19 11 -9 8" stroke="#f7cab3" stroke-width="3"/>';
+else if(['espinacas','esparragos','judias'].includes(id))s=`<path d="M0 28C-44 -4 -18 -43 0 -26C21 -43 44 -6 0 28Z" fill="${c}"/><path d="M0 28 0 -20M0 8 -14 -4M0 -2 14 -13" fill="none" stroke="#c4d39b" stroke-width="2"/>`;
+else if(id==='setas')s='<path d="M-8 -1 -10 25Q0 32 12 24L8 -1Z" fill="#e3d0ac"/><path d="M-30 0Q-26 -39 3 -32Q30 -27 30 0Z" fill="#af9270"/><ellipse cy="0" rx="30" ry="7" fill="#c8b395"/><circle cx="-12" cy="-18" r="4" fill="#d4bea0"/>';
+else if(['arroz','quinoa','cuscus','avena','garbanzos','lentejas','guisantes','edamame','arandanos','nueces','chia'].includes(id)){for(let i=0;i<15;i++){const a=i*2.4,rr=5+Math.sqrt(i)*6;s+=`<ellipse cx="${Math.cos(a)*rr}" cy="${Math.sin(a)*rr}" rx="${id==='arroz'?3:7}" ry="${id==='arroz'?8:6}" transform="rotate(${i*19})" fill="${c}" stroke="#ffffff" stroke-opacity=".3" stroke-width="1.3"/>`}}
+else if(['feta','fresco','cottage','mozzarella','cabra','tofu','kefir'].includes(id))s=`<rect x="-24" y="-21" width="48" height="43" rx="${id==='mozzarella'||id==='cabra'?20:7}" fill="${c}" stroke="#d8ccb2" stroke-width="1.5"/><path d="M-14 -10 10 -10M-14 0 -4 0" stroke="#fffaf0" stroke-width="5" opacity=".6"/>`;
+else if(id==='zanahoria')s='<path d="M-17 -20 18 -20 0 34Z" fill="#e69a48"/><path d="M0 -20 -12 -35M0 -20 2 -39M0 -20 16 -33" stroke="#708e51" stroke-width="5"/><path d="M-11 -9 2 -9M-6 3 4 3" stroke="#f8bd70" stroke-width="3"/>';
+else if(id==='sandia')s='<path d="M-31 -17 31 -17Q31 36 0 35Q-31 32 -31 -17" fill="#77965c"/><path d="M-26 -17 26 -17Q24 28 0 28Q-23 26 -26 -17" fill="#eb9b88"/><path d="M-12 -5 -12 0M10 -3 10 3M0 12 0 17" stroke="#79584c" stroke-width="3" stroke-linecap="round"/>';
+else if(id==='platano')s='<path d="M-25 -25Q-15 20 28 9Q19 42 -13 20Q-29 9 -25 -25" fill="#e6c455" stroke="#c9a845" stroke-width="2"/>';
+else if(id==='pimiento')s='<path d="M-24 -8Q-22 -29 -2 -18Q20 -30 25 -8L20 23Q0 36 -20 23Z" fill="#d87b51"/><path d="M-1 -17Q-6 -30 6 -34" fill="none" stroke="#5e7b48" stroke-width="6"/>';
+else if(id==='cebolla')s='<path d="M0 -33Q-5 -20 -18 -9C-42 21 -7 40 19 23Q34 10 15 -10Z" fill="#c9a3b6"/><path d="M0 -19Q-20 20 0 30M4 -19Q23 20 5 30" fill="none" stroke="#e8c9d1" stroke-width="3"/>';
+else if(id==='aceitunas')s='<ellipse cx="-9" cy="-7" rx="16" ry="22" fill="#728151"/><ellipse cx="14" cy="15" rx="13" ry="19" fill="#5d6c48"/><ellipse cx="-12" cy="-14" rx="4" ry="7" fill="#9cab70"/>';
+else if(id==='noodles'){for(let i=0;i<7;i++)s+=`<path d="M-26 ${i*7-23} Q-7 ${i*7-40} 10 ${i*7-23} T30 ${i*7-25}" fill="none" stroke="#decba2" stroke-width="4"/>`}
+else s=`<ellipse rx="28" ry="24" fill="${c}" stroke="#aa8e68" stroke-opacity=".2" stroke-width="2"/><path d="M-15 -7 15 -7M-15 4 10 4" stroke="#fff" stroke-opacity=".3" stroke-width="3"/>`;
+return `<g transform="${t}">${s}</g>`}
+const wrap=(body,w=400,h=320)=>`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><defs><filter id="s" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="8" stdDeviation="9" flood-color="#4c5736" flood-opacity=".15"/></filter></defs>${body}</svg>`;
+for(const i of ingredients)fs.writeFileSync(`dist/assets/ingredient-${i.id}.svg`,wrap(`<ellipse cx="100" cy="127" rx="45" ry="6" fill="#75805b" opacity=".09"/>${shape(i.id,100,79,100,-12)}`,200,155));
+for(const [n,r]of recipes.entries()){let body='<ellipse cx="204" cy="171" rx="145" ry="128" fill="#37462c" opacity=".07"/><circle cx="200" cy="157" r="137" fill="#fffdf3" filter="url(#s)"/><circle cx="200" cy="157" r="119" fill="#f0efdf" stroke="#dfdfcd" stroke-width="1"/><circle cx="200" cy="157" r="109" fill="#ebe9d5"/>';
+if(!['Desayuno','Horno'].includes(r.kind)){for(let k=0;k<12;k++){const a=k*2.4;body+=shape('espinacas',200+Math.cos(a)*80,157+Math.sin(a)*75,39,k*37)}}
+for(let k=0;k<r.items.length;k++){const it=r.items[k],a=k*6.28/r.items.length-1.4,cx=200+Math.cos(a)*63,cy=157+Math.sin(a)*59;body+=shape(it.id,cx,cy,69,(k*73+n*11)%360);if(['arroz','quinoa','garbanzos','lentejas','cuscus','guisantes','edamame'].includes(it.id))body+=shape(it.id,cx+10,cy+14,68,30)}
+for(let k=0;k<15;k++){const a=k*2.4,rr=15+Math.sqrt(k)*23;body+=`<circle cx="${200+Math.cos(a)*rr}" cy="${157+Math.sin(a)*rr}" r="1.4" fill="#607346" opacity=".7"/>`}
+fs.writeFileSync(`dist/assets/${r.id}.svg`,wrap(body));}
+console.log(`Created ${ingredients.length} ingredient images and ${recipes.length} recipe illustrations.`);

@@ -1,0 +1,10 @@
+.openai/
+node_modules/
+.cloudflare/
+.wrangler/
+.env
+.env.*
+!.env.example
+*.log
+# Las ilustraciones se generan desde generate-assets.mjs al construir la web.
+dist/assets/*.svg
